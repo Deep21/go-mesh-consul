@@ -1,16 +1,16 @@
 version: "3"
 
 services:
-  customer-db:
-    container_name: customer-db
-    image: mysql/mysql-server
-    ports:
-      - "3306:33060"
-    environment:
-        MYSQL_DATABASE: customer
-        MYSQL_USER: user
-        MYSQL_PASSWORD: test
-        MYSQL_ROOT_PASSWORD: newpassword
+  # customer-db:
+  #   container_name: customer-db
+  #   image: mysql/mysql-server
+  #   ports:
+  #     - "3306:33060"
+  #   environment:
+  #       MYSQL_DATABASE: customer
+  #       MYSQL_USER: user
+  #       MYSQL_PASSWORD: test
+  #       MYSQL_ROOT_PASSWORD: newpassword
 
   # customer:
   #   build: customer/.
@@ -31,17 +31,29 @@ services:
   #       condition: service_healthy
   #   ports:
   #     - "9090:9090"
-
-  order:
-    container_name: order
-    image: mysql/mysql-server
+  product:
+    image: prod:latest
+    container_name: product
+    depends_on: 
+      product-db:
+        condition: service_healthy
     ports:
-      - "3307:33060"
+      - "9090:9090"
     environment:
-        MYSQL_DATABASE: orders
-        MYSQL_USER: user
-        MYSQL_PASSWORD: test
-        MYSQL_ROOT_PASSWORD: newpassword
+        USER: user
+        PWD: test
+        APP_PORT: 9090
+
+  # order-db:
+  #   container_name: order-db
+  #   image: mysql/mysql-server
+  #   ports:
+  #     - "3307:33060"
+  #   environment:
+  #       MYSQL_DATABASE: orders
+  #       MYSQL_USER: user
+  #       MYSQL_PASSWORD: test
+  #       MYSQL_ROOT_PASSWORD: newpassword
 
   product-db:
     container_name: product-db

@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/deep21/go-mesh-consul/product/models"
-	"github.com/deep21/go-mesh-consul/product/route"
+	"deep21/go-mesh-consul/product/models"
+	"deep21/go-mesh-consul/product/route"
 )
 
 func initialMigration() {

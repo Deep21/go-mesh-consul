@@ -3,9 +3,7 @@ package route
 import (
 	"net/http"
 
-	"github.com/deep21/go-mesh-consul/product/controller"
-
-	"github.com/deep21/go-mesh-consul/product/models"
+	"deep21/go-mesh-consul/product/controller"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,13 +14,11 @@ func SetupRouter() *gin.Engine {
 	v1 := r.Group("/v1")
 	{
 		v1.GET("/products", func(ctx *gin.Context) {
-			ctx.IndentedJSON(http.StatusOK, controller.AllProducts())
+			ctx.IndentedJSON(http.StatusOK, controller.AllProducts)
 		})
 
 		v1.GET("/product/:id", func(ctx *gin.Context) {
-			id := ctx.Param("id")
-			var f *models.Product = controller.FindProduct(id)
-			ctx.IndentedJSON(http.StatusOK, f)
+			ctx.IndentedJSON(http.StatusOK, controller.FindProduct("3"))
 		})
 
 		v1.POST("/products", controller.NewProduct)

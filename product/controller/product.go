@@ -37,10 +37,10 @@ func AllProducts() *[]models.Product {
 }
 
 func FindProduct(id string) *models.Product {
-	var user models.Product
+	var product models.Product
 
-	models.DB.Find(&user)
-	return &user
+	models.DB.Find(&product)
+	return &product
 }
 
 func DeleteUser(c *gin.Context) {
