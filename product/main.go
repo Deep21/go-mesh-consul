@@ -2,7 +2,9 @@ package main
 
 import (
 	"deep21/go-mesh-consul/product/models"
+	"deep21/go-mesh-consul/product/route"
 	"fmt"
+	"os"
 )
 
 func initialMigration() {
@@ -17,8 +19,8 @@ func main() {
 	models.DB.Find(&p)
 	fmt.Println(p)
 
-	// r := route.SetupRouter()
-	// var appPort string = os.Getenv("APP_PORT")
+	r := route.SetupRouter()
+	var appPort string = os.Getenv("APP_PORT")
 
-	// r.Run(":" + appPort)
+	r.Run(":" + appPort)
 }
