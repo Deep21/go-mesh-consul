@@ -21,7 +21,8 @@ func SetupRouter() *gin.Engine {
 		})
 
 		v1.GET("/product/:id", func(ctx *gin.Context) {
-			ctx.IndentedJSON(http.StatusOK, controller.FindProduct("3"))
+			var id string = ctx.Param("id")
+			ctx.IndentedJSON(http.StatusOK, controller.FindProduct(id))
 		})
 
 		v1.POST("/products", controller.NewProduct)
