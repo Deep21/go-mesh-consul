@@ -31,9 +31,9 @@ func NewProduct(c *gin.Context) {
 }
 
 func AllProducts() *[]models.Product {
-	var users []models.Product
-	models.DB.Find(&users)
-	return &users
+	var p []models.Product
+	models.DB.Find(&p)
+	return &p
 }
 
 func FindProduct(id string) *models.Product {

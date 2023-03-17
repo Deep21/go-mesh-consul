@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"deep21/go-mesh-consul/product/controller"
+	"deep21/go-mesh-consul/product/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +15,8 @@ func SetupRouter() *gin.Engine {
 	v1 := r.Group("/v1")
 	{
 		v1.GET("/products", func(ctx *gin.Context) {
-			ctx.IndentedJSON(http.StatusOK, controller.AllProducts)
+			var f *[]models.Product = controller.AllProducts()
+			ctx.IndentedJSON(http.StatusOK, f)
 		})
 
 		v1.GET("/product/:id", func(ctx *gin.Context) {

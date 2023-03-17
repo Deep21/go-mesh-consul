@@ -10,10 +10,10 @@ var DB *gorm.DB
 type Product struct {
 	gorm.Model
 	ID          int
-	Reference   string
-	ProductName string
-	Description string
-	Price       uint8
+	Reference   string `json:"reference" binding:"required"`
+	ProductName string `json:"productname" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	Price       uint8  `json:"price" binding:"required"`
 }
 
 func ConnectDatabase() {
