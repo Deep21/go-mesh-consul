@@ -1,7 +1,6 @@
 package route
 
 import (
-	"fmt"
 	"net/http"
 
 	"deep21/go-mesh-consul/product/controller"
@@ -16,13 +15,9 @@ func SetupRouter() *gin.Engine {
 	v1 := r.Group("/v1")
 	{
 		v1.GET("/products", func(ctx *gin.Context) {
-			var p []models.Product
-			models.DB.Find(&p)
-			var sp *[]models.Product = controller.AllProducts()
-			fmt.Println(sp)
-
-			// var f []models.Product = controller.AllProducts()
-			ctx.IndentedJSON(http.StatusOK, p)
+			var sp []models.Product
+			models.DB.Find(&sp)
+			ctx.IndentedJSON(http.StatusOK, sp)
 		})
 
 		v1.GET("/product/:id", func(ctx *gin.Context) {
