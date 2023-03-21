@@ -1,14 +1,16 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
-	"github.com/deep21/go-mesh-consul/product/models"
+	"deep21/go-mesh-consul/product/models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func NewUser(c *gin.Context) {
+func NewProduct(c *gin.Context) {
 	var p models.Product
 
 	if err := c.ShouldBindJSON(&p); err != nil {
@@ -24,10 +26,8 @@ func NewUser(c *gin.Context) {
 
 	models.DB.Create(&product)
 
-}
-
-func NewProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": true})
+
 }
 
 func AllProducts() *[]models.Product {
@@ -36,21 +36,26 @@ func AllProducts() *[]models.Product {
 	return &p
 }
 
-func FindProduct(id string) *models.Product {
+func FindProduct(c *gin.Context) *models.Product {
 	var product models.Product
+	var id string = c.Param("id")
 
-	models.DB.Find(&product)
+	r := models.DB.First(&product, "id = ?", id)
+	if errors.Is(r.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return nil
+	}
 	return &product
 }
 
 func DeleteUser(c *gin.Context) {
-	var u models.Product
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&u).Error; err != nil {
+	var product models.Product
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&product).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
 
-	models.DB.Delete(&u)
+	models.DB.Delete(&product)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }

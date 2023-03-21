@@ -17,7 +17,6 @@ type Product struct {
 }
 
 func ConnectDatabase() {
-	// var ip string = "product-db:3306"
 	var dsn = "user:test@tcp(product-db:3306)" + "/" + "product?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 

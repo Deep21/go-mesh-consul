@@ -1,36 +1,25 @@
 version: "3"
 
 services:
-  # customer-db:
-  #   container_name: customer-db
-  #   image: mysql/mysql-server
-  #   ports:
-  #     - "3306:33060"
-  #   environment:
-  #       MYSQL_DATABASE: customer
-  #       MYSQL_USER: user
-  #       MYSQL_PASSWORD: test
-  #       MYSQL_ROOT_PASSWORD: newpassword
-
-  # customer:
-  #   build: customer/.
-  #   image: customer:latest
-  #   container_name: customer
-  #   depends_on:
-  #     customer-db:
-  #       condition: service_healthy
-  #   ports:
-  #     - "9091:9091"
-
-  # order:
-  #   build: order/.
-  #   image: order:latest
-  #   container_name: order
-  #   depends_on: 
-  #     db2:
-  #       condition: service_healthy
-  #   ports:
-  #     - "9090:9090"
+  front:
+    image: front:latest
+    container_name: front
+    ports:
+      - "8080:80"
+    environment:
+        APP_PORT: 9292
+  customer:
+    image: customer:latest
+    container_name: customer
+    depends_on:
+      customer-db:
+        condition: service_healthy
+    ports:
+      - "9292:9292"
+    environment:
+        USER: user
+        PWD: test
+        APP_PORT: 9292
   product:
     image: prod:latest
     container_name: product
@@ -44,24 +33,45 @@ services:
         PWD: test
         APP_PORT: 9090
 
-  # order-db:
-  #   container_name: order-db
-  #   image: mysql/mysql-server
-  #   ports:
-  #     - "3307:33060"
-  #   environment:
-  #       MYSQL_DATABASE: orders
-  #       MYSQL_USER: user
-  #       MYSQL_PASSWORD: test
-  #       MYSQL_ROOT_PASSWORD: newpassword
-
+  order:
+    image: order:latest
+    container_name: order
+    depends_on: 
+      order-db:
+        condition: service_healthy
+    ports:
+      - "9191:9191"
+    environment:
+        USER: user
+        PWD: test
+        APP_PORT: 9191
+  order-db:
+    container_name: order-db
+    image: mysql/mysql-server
+    ports:
+      - "3306:33060"
+    environment:
+        MYSQL_DATABASE: order
+        MYSQL_USER: user
+        MYSQL_PASSWORD: test
+        MYSQL_ROOT_PASSWORD: newpassword
   product-db:
     container_name: product-db
     image: mysql/mysql-server
     ports:
-      - "3308:33060"
+      - "3307:33060"
     environment:
         MYSQL_DATABASE: product
+        MYSQL_USER: user
+        MYSQL_PASSWORD: test
+        MYSQL_ROOT_PASSWORD: newpassword
+  customer-db:
+    container_name: customer-db
+    image: mysql/mysql-server
+    ports:
+      - "3308:33060"
+    environment:
+        MYSQL_DATABASE: customer
         MYSQL_USER: user
         MYSQL_PASSWORD: test
         MYSQL_ROOT_PASSWORD: newpassword
