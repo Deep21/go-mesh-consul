@@ -1,0 +1,59 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-mysql
+spec:
+  type: ClusterIP
+  selector:
+    app: order-mysql
+  ports:
+    - protocol: TCP
+      port: 3305
+      targetPort: 3306
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: order-mysql
+automountServiceAccountToken: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: order-mysql
+      app: order-mysql
+  template:
+    metadata:
+      labels:
+        service: order-mysql
+        app: order-mysql
+      annotations:
+        "consul.hashicorp.com/connect-inject": 'true'
+    spec:
+      serviceAccountName: order-mysql
+      containers:
+        - name: order-mysql
+          image: mysql:5.6
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: order
+            - name: MYSQL_USER
+              value: user
+            - name: MYSQL_PASSWORD
+              value: test
+            - name: MYSQL_ROOT_PASSWORD
+              value: newpassword
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: "mysqldata-order"
+      volumes:
+        - name: mysqldata-order
+          emptyDir: {}

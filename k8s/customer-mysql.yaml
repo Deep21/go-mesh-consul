@@ -1,0 +1,59 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-mysql
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 3307
+      targetPort: 3306
+  selector:
+    app: customer-mysql
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: customer-mysql
+automountServiceAccountToken: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: customer-mysql
+      app: customer-mysql
+  template:
+    metadata:
+      labels:
+        service: customer-mysql
+        app: customer-mysql
+      annotations:
+        "consul.hashicorp.com/connect-inject": 'true'
+    spec:
+      serviceAccountName: customer-mysql
+      containers:
+        - name: customer-mysql
+          image: mysql:5.6
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: customer
+            - name: MYSQL_USER
+              value: user
+            - name: MYSQL_PASSWORD
+              value: test
+            - name: MYSQL_ROOT_PASSWORD
+              value: newpassword
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: "mysqldata-customer"
+      volumes:
+        - name: mysqldata-customer
+          emptyDir: {}
