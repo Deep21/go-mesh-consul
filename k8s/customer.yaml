@@ -39,7 +39,7 @@ spec:
       serviceAccountName: customer
       containers:
         - name: customer
-          image: localhost:5000/customer/k8s:latest
+          image: deep21/customer:latest
           ports:
             - containerPort: 9292
           env:

@@ -41,7 +41,7 @@ spec:
       serviceAccountName: order
       containers:
         - name: order
-          image: localhost:5000/order/k8s:latest
+          image: deep21/order:latest
           ports:
             - containerPort: 9191
           env:
